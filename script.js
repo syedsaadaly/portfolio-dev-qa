@@ -221,8 +221,8 @@ if (heroAnim) {
   const wrap   = heroAnim.closest('.hero__anim');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // No file, no box: a missing or broken image just collapses the column.
-  heroAnim.addEventListener('error', () => { wrap.hidden = true; });
+  // No file, no box: a missing or broken image just drops out (the QA artwork is inline and unaffected).
+  heroAnim.addEventListener('error', () => { heroAnim.hidden = true; });
 
   // Desktop pointers only: the artwork leans a little toward the cursor.
   if (window.matchMedia('(hover: hover)').matches && !reduce) {
@@ -233,3 +233,96 @@ if (heroAnim) {
     });
   }
 }
+
+// ─── DEVELOPER / QA VIEW ─────────────────────
+// One page, two framings. `data-mode` on <html> drives the theme tokens and
+// which `.m-dev` / `.m-qa` copy is shown. The choice is remembered and can be
+// shared as ?mode=qa. The head script already applied the saved mode before
+// first paint; this just wires the controls and animates later switches.
+(() => {
+  const root = document.documentElement;
+  const STORAGE_KEY = 'saad-mode';
+  const FADE_MS = 280;
+
+  const META = {
+    dev: {
+      title: 'Syed Saad Ali — Back-End Developer',
+      description: 'Syed Saad Ali — Back-End Developer in Karachi working with PHP, Laravel and MySQL, with a QA background.',
+    },
+    qa: {
+      title: 'Syed Saad Ali — QA Engineer',
+      description: 'Syed Saad Ali — QA Engineer in Karachi: manual testing, test case design, traceability matrices, Jira and Postman, backed by hands-on back-end development.',
+    },
+  };
+
+  const buttons = document.querySelectorAll('[data-mode-btn]');
+  const links   = document.querySelectorAll('[data-mode-link]');
+  const metaDesc = document.querySelector('meta[name="description"]');
+  let switching = false;
+
+  function currentMode() {
+    return root.getAttribute('data-mode') === 'qa' ? 'qa' : 'dev';
+  }
+
+  function syncChrome(mode) {
+    buttons.forEach(btn => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.modeBtn === mode));
+    });
+    document.title = META[mode].title;
+    if (metaDesc) metaDesc.setAttribute('content', META[mode].description);
+
+    try { localStorage.setItem(STORAGE_KEY, mode); } catch (e) { /* ignore */ }
+
+    // Keep the URL shareable: ?mode=qa for the QA view, clean for the default.
+    try {
+      const url = new URL(location.href);
+      if (mode === 'qa') url.searchParams.set('mode', 'qa');
+      else url.searchParams.delete('mode');
+      history.replaceState(null, '', url);
+    } catch (e) { /* ignore */ }
+  }
+
+  function afterSwitch() {
+    // Slide heights change with the copy, so let the carousels re-measure.
+    if (typeof projectsSwiper !== 'undefined' && projectsSwiper) projectsSwiper.update();
+    if (typeof certsSwiper !== 'undefined' && certsSwiper) certsSwiper.update();
+  }
+
+  function setMode(mode, { animate = true } = {}) {
+    if (mode !== 'qa') mode = 'dev';
+    if (mode === currentMode() || switching) return;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!animate || reduce) {
+      root.setAttribute('data-mode', mode);
+      syncChrome(mode);
+      afterSwitch();
+      return;
+    }
+
+    switching = true;
+    document.body.classList.add('is-switching');
+
+    setTimeout(() => {
+      root.setAttribute('data-mode', mode);
+      syncChrome(mode);
+      afterSwitch();
+
+      // Let the new content lay out before fading it back in.
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        document.body.classList.remove('is-switching');
+        switching = false;
+      }));
+    }, FADE_MS);
+  }
+
+  buttons.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.modeBtn)));
+  links.forEach(link => link.addEventListener('click', () => {
+    setMode(link.dataset.modeLink);
+    if (typeof toggleMenu === 'function' && typeof menuOpen !== 'undefined' && menuOpen) toggleMenu(false);
+  }));
+
+  // Reflect whatever the head script chose (title, pressed state, URL).
+  syncChrome(currentMode());
+
+})();

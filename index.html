@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-mode="dev">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Syed Saad Ali — Back-End Developer</title>
+  <meta name="description" content="Syed Saad Ali — Back-End Developer in Karachi working with PHP, Laravel and MySQL, with a QA background." />
+  <!-- Pick the saved view (Developer / QA) before the first paint so there's no flash of the wrong theme. -->
+  <script>
+    (function () {
+      var mode = 'dev';
+      try {
+        var fromUrl = new URLSearchParams(location.search).get('mode');
+        mode = fromUrl || localStorage.getItem('saad-mode') || 'dev';
+      } catch (e) { /* storage blocked — fall back to dev */ }
+      document.documentElement.setAttribute('data-mode', mode === 'qa' ? 'qa' : 'dev');
+    })();
+  </script>
   <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="assets/images/favicon.png" type="image/png" sizes="32x32" />
   <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
@@ -190,7 +202,7 @@
 
   <!-- ========== NAV ========== -->
   <nav class="nav" id="navbar">
-    <div class="nav__logo">saad.</div>
+    <a href="#home" class="nav__logo">saad.<span class="nav__logo-mode" aria-hidden="true"><span class="m-dev">dev</span><span class="m-qa">qa</span></span></a>
     <ul class="nav__links">
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
@@ -198,11 +210,32 @@
       <li><a href="#skills">Skills</a></li>
       <li><a href="#education">Education</a></li>
       <li><a href="#certificates">Certificates</a></li>
-      <li><a href="#contact" class="nav__cta">Let's Talk →</a></li>
     </ul>
-    <button class="nav__hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav__right">
+      <!-- Developer / QA view switch -->
+      <div class="mode-switch" role="group" aria-label="Choose how to view this portfolio">
+        <span class="mode-switch__thumb" aria-hidden="true"></span>
+        <button type="button" class="mode-switch__btn" data-mode-btn="dev" aria-pressed="true"
+          title="View as a back-end developer">
+          <svg class="mode-switch__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 6 2.5 12 8 18M16 6l5.5 6L16 18M13.5 4l-3 16" />
+          </svg>
+          <span class="mode-switch__label">Developer</span>
+        </button>
+        <button type="button" class="mode-switch__btn" data-mode-btn="qa" aria-pressed="false"
+          title="View as a QA engineer">
+          <svg class="mode-switch__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2.5 4 5.5v6c0 4.6 3.4 8.5 8 10 4.6-1.5 8-5.4 8-10v-6l-8-3Z" />
+            <path d="m8.5 12 2.4 2.4L15.5 9.6" />
+          </svg>
+          <span class="mode-switch__label">QA</span>
+        </button>
+      </div>
+      <a href="#contact" class="nav__cta">Let's Talk →</a>
+      <button class="nav__hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </nav>
 
   <!-- Mobile Menu -->
@@ -216,6 +249,10 @@
       <li><a href="#certificates" class="mob-link">Certificates</a></li>
       <li><a href="#contact" class="mob-link">Contact</a></li>
     </ul>
+    <p class="mobile-menu__mode">
+      <span class="m-dev">Viewing the developer profile · <button type="button" data-mode-link="qa">switch to QA</button></span>
+      <span class="m-qa">Viewing the QA profile · <button type="button" data-mode-link="dev">switch to Developer</button></span>
+    </p>
   </div>
 
   <!-- ========== HERO ========== -->
@@ -223,24 +260,120 @@
     <div class="hero__grid">
     <div class="hero__inner reveal">
       <h1 class="hero__headline">
-        <em>I&#39;m Saad,</em> a back-end developer
-        building <span class="hero__accent">scalable</span> systems.
+        <span class="m-dev"><em>I&#39;m Saad,</em> a back-end developer
+          building <span class="hero__accent">scalable</span> systems.</span>
+        <span class="m-qa"><em>I&#39;m Saad,</em> a QA engineer who finds
+          the bugs <span class="hero__accent">before</span> your users do.</span>
       </h1>
 
       <p class="hero__sub">
-        I write PHP, Laravel and MySQL for a living, and I bring a QA background to it — so what
-        ships is tested, readable and quick.
+        <span class="m-dev">I write PHP, Laravel and MySQL for a living, and I bring a QA background to it — so what
+          ships is tested, readable and quick.</span>
+        <span class="m-qa">I test web products end to end — test cases, traceability matrices, defect reports in Jira,
+          API checks in Postman. And because I also write back-end code, I know exactly where defects like to hide.</span>
       </p>
 
       <div class="hero__actions">
         <a href="resume.pdf" target="_blank" class="btn btn--dark">View Resume ↗</a>
-        <a href="#projects" class="btn btn--outline">See Projects →</a>
+        <a href="#projects" class="btn btn--outline"><span class="m-dev">See Projects →</span><span class="m-qa">See What I&#39;ve Tested →</span></a>
       </div>
+
+      <p class="hero__switch">
+        <span class="m-dev">Hiring for QA instead? <button type="button" data-mode-link="qa">View my QA profile →</button></span>
+        <span class="m-qa">Need a back-end developer? <button type="button" data-mode-link="dev">View my developer profile →</button></span>
+      </p>
     </div>
 
       <div class="hero__anim reveal" aria-hidden="true">
-        <img id="heroAnim" src="assets/images/code-typing.svg"
+        <img id="heroAnim" class="m-dev" src="assets/images/code-typing.svg"
           alt="Illustration of a developer coding" loading="eager" decoding="async" />
+
+        <!-- QA view: a test run in progress. Inline so it picks up the theme colours. -->
+        <svg class="qa-ill m-qa" viewBox="0 0 620 460" aria-hidden="true" focusable="false">
+          <defs>
+            <clipPath id="qaWin"><rect x="60" y="70" width="400" height="300" rx="16" /></clipPath>
+          </defs>
+
+          <!-- soft backdrop -->
+          <ellipse class="qa-ill__wash" cx="300" cy="250" rx="280" ry="190" />
+          <g class="qa-ill__grid" stroke-width="1">
+            <path d="M80 420h460M80 400h460M80 440h460" />
+          </g>
+
+          <!-- browser window -->
+          <rect class="qa-ill__card" x="60" y="70" width="400" height="300" rx="16" />
+          <g clip-path="url(#qaWin)">
+            <rect class="qa-ill__bar" x="60" y="70" width="400" height="40" />
+          </g>
+          <circle class="qa-ill__dot" cx="84" cy="90" r="5" />
+          <circle class="qa-ill__dot" cx="102" cy="90" r="5" />
+          <circle class="qa-ill__dot" cx="120" cy="90" r="5" />
+          <rect class="qa-ill__url" x="150" y="82" width="230" height="16" rx="8" />
+
+          <!-- test rows -->
+          <g class="qa-ill__row qa-ill__row--1">
+            <circle class="qa-ill__check-bg" cx="100" cy="146" r="12" />
+            <path class="qa-ill__check" d="m93.5 146 4.5 4.5 9-9.5" />
+            <rect class="qa-ill__line" x="124" y="140" width="190" height="12" rx="6" />
+            <rect class="qa-ill__pass" x="380" y="138" width="52" height="16" rx="8" />
+          </g>
+          <g class="qa-ill__row qa-ill__row--2">
+            <circle class="qa-ill__check-bg" cx="100" cy="190" r="12" />
+            <path class="qa-ill__check" d="m93.5 190 4.5 4.5 9-9.5" />
+            <rect class="qa-ill__line" x="124" y="184" width="150" height="12" rx="6" />
+            <rect class="qa-ill__pass" x="380" y="182" width="52" height="16" rx="8" />
+          </g>
+          <g class="qa-ill__row qa-ill__row--3">
+            <circle class="qa-ill__check-bg" cx="100" cy="234" r="12" />
+            <path class="qa-ill__check" d="m93.5 234 4.5 4.5 9-9.5" />
+            <rect class="qa-ill__line" x="124" y="228" width="210" height="12" rx="6" />
+            <rect class="qa-ill__pass" x="380" y="226" width="52" height="16" rx="8" />
+          </g>
+          <g class="qa-ill__row qa-ill__row--4">
+            <circle class="qa-ill__bug-bg" cx="100" cy="278" r="12" />
+            <path class="qa-ill__bug" d="M96 274l8 8M104 274l-8 8" />
+            <rect class="qa-ill__line" x="124" y="272" width="170" height="12" rx="6" />
+            <rect class="qa-ill__fail" x="380" y="270" width="52" height="16" rx="8" />
+          </g>
+          <g class="qa-ill__row qa-ill__row--5">
+            <circle class="qa-ill__check-bg" cx="100" cy="322" r="12" />
+            <path class="qa-ill__check" d="m93.5 322 4.5 4.5 9-9.5" />
+            <rect class="qa-ill__line" x="124" y="316" width="130" height="12" rx="6" />
+            <rect class="qa-ill__pass" x="380" y="314" width="52" height="16" rx="8" />
+          </g>
+
+          <!-- summary card -->
+          <g class="qa-ill__float">
+            <rect class="qa-ill__card qa-ill__card--raised" x="400" y="190" width="170" height="150" rx="14" />
+            <circle class="qa-ill__ring-track" cx="452" cy="250" r="30" />
+            <circle class="qa-ill__ring" cx="452" cy="250" r="30" transform="rotate(-90 452 250)" />
+            <text class="qa-ill__big" x="452" y="256" text-anchor="middle">96%</text>
+            <text class="qa-ill__label" x="500" y="236">PASSED</text>
+            <rect class="qa-ill__line" x="500" y="246" width="50" height="8" rx="4" />
+            <text class="qa-ill__label" x="500" y="282">OPEN</text>
+            <rect class="qa-ill__line" x="500" y="292" width="34" height="8" rx="4" />
+            <rect class="qa-ill__line qa-ill__line--thin" x="420" y="310" width="130" height="6" rx="3" />
+            <rect class="qa-ill__progress" x="420" y="310" width="125" height="6" rx="3" />
+          </g>
+
+          <!-- magnifier -->
+          <g class="qa-ill__float qa-ill__float--slow">
+            <circle class="qa-ill__glass" cx="112" cy="356" r="34" />
+            <circle class="qa-ill__glass-rim" cx="112" cy="356" r="34" />
+            <path class="qa-ill__handle" d="m137 381 30 30" />
+            <path class="qa-ill__glass-shine" d="M94 346a22 22 0 0 1 14-13" />
+          </g>
+
+          <!-- small bug, caught -->
+          <g transform="translate(500 100)">
+            <g class="qa-ill__float qa-ill__float--fast">
+              <circle class="qa-ill__bug-chip" r="26" />
+              <ellipse class="qa-ill__bug-body" cx="0" cy="3" rx="9" ry="12" />
+              <circle class="qa-ill__bug-body" cx="0" cy="-10" r="5" />
+              <path class="qa-ill__bug-legs" d="M-9 -2l-8 -5M9 -2l8 -5M-9 5l-9 0M9 5l9 0M-8 11l-7 6M8 11l7 6M0 -9v22" />
+            </g>
+          </g>
+        </svg>
       </div>
     </div>
 
@@ -268,18 +401,35 @@
       </div>
       <div class="about__right reveal">
         <span class="section__label">About me</span>
-        <h2 class="about__heading">Back-end systems<br>built to last.</h2>
-        <p class="about__text">
-          I'm a Back-End Developer from Karachi with a strong foundation in PHP, Laravel, and MySQL. I leverage a QA
-          background to write maintainable, bug-free code — and I care about both performance and clean architecture.
-        </p>
-        <p class="about__text">
-          The back end is where I'm strongest, but I don't stop there — I'm comfortable enough with HTML,
-          CSS, JavaScript and Bootstrap to take a site from an empty folder to something responsive and
-          live, on my own.
-        </p>
-        
-        <div class="about__tags">
+        <h2 class="about__heading">
+          <span class="m-dev">Back-end systems<br>built to last.</span>
+          <span class="m-qa">Quality isn't a phase.<br>It's a habit.</span>
+        </h2>
+
+        <div class="m-dev">
+          <p class="about__text">
+            I'm a Back-End Developer from Karachi with a strong foundation in PHP, Laravel, and MySQL. I leverage a QA
+            background to write maintainable, bug-free code — and I care about both performance and clean architecture.
+          </p>
+          <p class="about__text">
+            The back end is where I'm strongest, but I don't stop there — I'm comfortable enough with HTML,
+            CSS, JavaScript and Bootstrap to take a site from an empty folder to something responsive and
+            live, on my own.
+          </p>
+        </div>
+        <div class="m-qa">
+          <p class="about__text">
+            I'm a QA engineer from Karachi with hands-on manual testing experience: writing test cases, building
+            traceability matrices, running regression passes and filing defect reports that developers can actually
+            reproduce.
+          </p>
+          <p class="about__text">
+            I also work as a back-end developer in PHP and Laravel, so I read the code, query MySQL to validate the
+            data, and test APIs in Postman. I don't just find the bug — I can usually point at the line that caused it.
+          </p>
+        </div>
+
+        <div class="about__tags m-dev">
           <span class="tag">PHP</span>
           <span class="tag">Laravel</span>
           <span class="tag">MySQL</span>
@@ -290,6 +440,18 @@
           <span class="tag">GitHub</span>
           <span class="tag">Postman</span>
           <span class="tag">Jira</span>
+        </div>
+        <div class="about__tags m-qa">
+          <span class="tag">Manual Testing</span>
+          <span class="tag">Test Case Design</span>
+          <span class="tag">Traceability Matrix</span>
+          <span class="tag">Bug Reporting</span>
+          <span class="tag">Regression</span>
+          <span class="tag">Jira</span>
+          <span class="tag">Postman</span>
+          <span class="tag">SQL</span>
+          <span class="tag">PHP / Laravel</span>
+          <span class="tag">GitHub</span>
         </div>
         <a href="#contact" class="about__cta">Let's Talk →</a>
       </div>
@@ -303,7 +465,10 @@
     <div class="section__header reveal">
       <div class="section__head-text">
         <span class="section__label">Experience</span>
-        <p class="section__note">Where I've worked, and what I actually shipped there.</p>
+        <p class="section__note">
+          <span class="m-dev">Where I've worked, and what I actually shipped there.</span>
+          <span class="m-qa">Where I've worked, and what I actually tested there.</span>
+        </p>
       </div>
     </div>
 
@@ -317,7 +482,7 @@
         <div class="timeline__body">
           <h3 class="timeline__role">Associate Back-End Developer</h3>
           <p class="timeline__company">Olive Digital Pvt. Ltd.</p>
-          <ul class="timeline__points">
+          <ul class="timeline__points m-dev">
             <li>Optimized MySQL queries and indexing, reducing average query response time by up to 30%.</li>
             <li>Collaborated with cross-functional teams to architect and deploy backend solutions for new
               product features.</li>
@@ -328,21 +493,37 @@
             <li>Used AI-assisted tools, including Claude, to accelerate debugging and documentation —
               cutting turnaround time on routine tasks by around 25%.</li>
           </ul>
+          <ul class="timeline__points m-qa">
+            <li>Identified and resolved recurring codebase bottlenecks, reducing bug resolution time by nearly 20%.</li>
+            <li>Reproduced, triaged and fixed issues reported across multiple product modules, working with QA and
+              product teams on each release.</li>
+            <li>Validated MySQL data and query results while optimizing indexing, cutting average response time by
+              up to 30%.</li>
+            <li>Tested my own PHP and Laravel modules against the acceptance criteria before hand-off, so fewer
+              defects reached the QA stage.</li>
+          </ul>
         </div>
       </div>
 
-      <div class="timeline__item reveal">
+      <div class="timeline__item timeline__item--qa reveal">
         <div class="timeline__meta">
           <span class="timeline__date">May 2025 – Jul 2025</span>
-          <span class="timeline__badge timeline__badge--muted">3 months</span>
+          <span class="timeline__badge timeline__badge--muted m-dev">3 months</span>
+          <span class="timeline__badge m-qa">QA role</span>
         </div>
         <div class="timeline__body">
           <h3 class="timeline__role">QA Intern</h3>
           <p class="timeline__company">ETL Online (Remote)</p>
-          <ul class="timeline__points">
+          <ul class="timeline__points m-dev">
             <li>Used Jira for task tracking and bug reporting.</li>
             <li>Wrote traceability matrices and test cases for various modules.</li>
             <li>Collaborated in QA activities for online projects in a remote environment.</li>
+          </ul>
+          <ul class="timeline__points m-qa">
+            <li>Wrote traceability matrices mapping requirements to test cases across multiple modules.</li>
+            <li>Designed and executed functional and regression test cases for live online projects.</li>
+            <li>Logged, tracked and re-verified defects in Jira through the full bug life cycle.</li>
+            <li>Worked with a fully remote QA team, reporting status and blockers asynchronously.</li>
           </ul>
         </div>
       </div>
@@ -370,7 +551,10 @@
     <div class="section__header reveal">
       <div class="section__head-text">
         <span class="section__label">Projects</span>
-        <p class="section__note">Client and product work I built or maintained the back end for.</p>
+        <p class="section__note">
+          <span class="m-dev">Client and product work I built or maintained the back end for.</span>
+          <span class="m-qa">Products I built the back end for — and tested before they went live.</span>
+        </p>
       </div>
       <div class="carousel-nav">
         <button class="carousel-btn" id="projectsPrev" type="button" aria-label="Previous projects">
@@ -397,7 +581,8 @@
                   <span class="tag">Analytics Dashboard</span>
                 </div>
                 <h3 class="project__title">Cheerlytics</h3>
-                <p class="project__desc">Real-time data visualization and performance tracking system.</p>
+                <p class="project__desc m-dev">Real-time data visualization and performance tracking system.</p>
+                <p class="project__desc m-qa">Real-time dashboard — tested metric accuracy against source data and live-refresh behaviour.</p>
               </div>
             </article>
           </div>
@@ -413,7 +598,8 @@
                   <span class="tag">Freelance Marketplace</span>
                 </div>
                 <h3 class="project__title">House of Gig</h3>
-                <p class="project__desc">A platform connecting skilled freelancers with global opportunities.</p>
+                <p class="project__desc m-dev">A platform connecting skilled freelancers with global opportunities.</p>
+                <p class="project__desc m-qa">Freelance marketplace — covered sign-up, gig posting and proposal flows with end-to-end test cases.</p>
               </div>
             </article>
           </div>
@@ -429,7 +615,8 @@
                   <span class="tag">Dealership &amp; Booking</span>
                 </div>
                 <h3 class="project__title">Kirkpatrick Racing</h3>
-                <p class="project__desc">Electric dirt bike dealership with an online shop and service booking flow.</p>
+                <p class="project__desc m-dev">Electric dirt bike dealership with an online shop and service booking flow.</p>
+                <p class="project__desc m-qa">Dealership site — regression-tested the shop checkout and service booking flow across devices.</p>
               </div>
             </article>
           </div>
@@ -445,7 +632,8 @@
                   <span class="tag">Portfolio CMS</span>
                 </div>
                 <h3 class="project__title">Michael J. Menard</h3>
-                <p class="project__desc">Customized personal branding site with a dynamic content manager.</p>
+                <p class="project__desc m-dev">Customized personal branding site with a dynamic content manager.</p>
+                <p class="project__desc m-qa">Personal brand site — verified the content manager's create, edit and publish paths plus responsive layouts.</p>
               </div>
             </article>
           </div>
@@ -461,7 +649,8 @@
                   <span class="tag">E-commerce</span>
                 </div>
                 <h3 class="project__title">Mizfitz</h3>
-                <p class="project__desc">Modern storefront with secure checkout and inventory management.</p>
+                <p class="project__desc m-dev">Modern storefront with secure checkout and inventory management.</p>
+                <p class="project__desc m-qa">E-commerce storefront — tested cart, checkout and inventory edge cases such as stock-outs and failed payments.</p>
               </div>
             </article>
           </div>
@@ -477,7 +666,8 @@
                   <span class="tag">SaaS Platform</span>
                 </div>
                 <h3 class="project__title">Pansup</h3>
-                <p class="project__desc">Cloud-based solution for streamlined business operations.</p>
+                <p class="project__desc m-dev">Cloud-based solution for streamlined business operations.</p>
+                <p class="project__desc m-qa">SaaS platform — validated role-based access and multi-step business workflows against the requirements.</p>
               </div>
             </article>
           </div>
@@ -493,7 +683,8 @@
                   <span class="tag">Property Portal</span>
                 </div>
                 <h3 class="project__title">Real Estate LLC</h3>
-                <p class="project__desc">Comprehensive listing engine for property buying and rentals.</p>
+                <p class="project__desc m-dev">Comprehensive listing engine for property buying and rentals.</p>
+                <p class="project__desc m-qa">Property portal — tested listing search, filters and enquiry forms, checking results against the database.</p>
               </div>
             </article>
           </div>
@@ -509,7 +700,8 @@
                   <span class="tag">Social Help Desk</span>
                 </div>
                 <h3 class="project__title">Ture Help</h3>
-                <p class="project__desc">Community support platform for managing localized assistance.</p>
+                <p class="project__desc m-dev">Community support platform for managing localized assistance.</p>
+                <p class="project__desc m-qa">Community help desk — covered request creation, assignment and status updates with functional test cases.</p>
               </div>
             </article>
           </div>
@@ -525,12 +717,15 @@
     <div class="section__header reveal">
       <div class="section__head-text">
         <span class="section__label">Skills</span>
-        <p class="section__note">The stack and tooling I reach for day to day.</p>
+        <p class="section__note">
+          <span class="m-dev">The stack and tooling I reach for day to day.</span>
+          <span class="m-qa">The testing toolkit I use — and the dev stack that tells me where bugs hide.</span>
+        </p>
       </div>
     </div>
 
     <div class="skills__grid">
-      <div class="skills__group reveal">
+      <div class="skills__group reveal" data-group="dev">
         <h4 class="skills__group-title">Languages & Frameworks</h4>
         <div class="skills__pills">
           <span class="pill">PHP</span>
@@ -541,25 +736,32 @@
           <span class="pill">Bootstrap</span>
         </div>
       </div>
-      <div class="skills__group reveal">
+      <div class="skills__group reveal" data-group="tools">
         <h4 class="skills__group-title">Database & Tools</h4>
         <div class="skills__pills">
           <span class="pill">MySQL</span>
           <span class="pill">GitHub</span>
           <span class="pill">Postman</span>
           <span class="pill">Jira</span>
+          <span class="pill m-qa">Chrome DevTools</span>
         </div>
       </div>
-      <div class="skills__group reveal">
+      <div class="skills__group reveal" data-group="qa">
         <h4 class="skills__group-title">QA & Testing</h4>
         <div class="skills__pills">
           <span class="pill">Manual Testing</span>
           <span class="pill">Test Case Design</span>
           <span class="pill">Bug Tracking</span>
           <span class="pill">Traceability Matrix</span>
+          <span class="pill m-qa">Regression Testing</span>
+          <span class="pill m-qa">Functional Testing</span>
+          <span class="pill m-qa">Defect Life Cycle</span>
+          <span class="pill m-qa">API Testing</span>
+          <span class="pill m-qa">SQL Data Validation</span>
+          <span class="pill m-qa">SDLC &amp; STLC</span>
         </div>
       </div>
-      <div class="skills__group reveal">
+      <div class="skills__group reveal" data-group="soft">
         <h4 class="skills__group-title">Soft Skills</h4>
         <div class="skills__pills">
           <span class="pill pill--soft">Communication</span>
@@ -604,7 +806,10 @@
     <div class="section__header reveal">
       <div class="section__head-text">
         <span class="section__label">Certificates</span>
-        <p class="section__note">Courses and internships behind the back-end &amp; QA work.</p>
+        <p class="section__note">
+          <span class="m-dev">Courses and internships behind the back-end &amp; QA work.</span>
+          <span class="m-qa">The QA training and internships behind my testing work, plus the dev courses.</span>
+        </p>
       </div>
       <div class="carousel-nav">
         <button class="carousel-btn" id="certsPrev" type="button" aria-label="Previous certificates">
@@ -787,8 +992,12 @@
     <div class="contact__inner reveal">
       <p class="section__label">Get in touch</p>
       <h2 class="contact__heading">Let's work<br><em>together.</em></h2>
-      <p class="contact__sub">Have a project in mind or want to discuss an opportunity? I'm currently open to new roles
-        and freelance work.</p>
+      <p class="contact__sub">
+        <span class="m-dev">Have a project in mind or want to discuss an opportunity? I'm currently open to new roles
+          and freelance work.</span>
+        <span class="m-qa">Need someone who can both find the bug and explain the fix? I'm open to QA roles and
+          freelance testing work.</span>
+      </p>
       <div class="contact__actions">
         <a href="mailto:syedsaadaly01@gmail.com" class="btn btn--dark">syedsaadaly01@gmail.com →</a>
         <a href="tel:+923348214425" class="btn btn--outline">+92 334 8214425</a>
